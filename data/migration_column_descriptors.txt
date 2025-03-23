@@ -1,0 +1,5 @@
+Column Descriptors:
+
+Entity: Country or territory name (String)
+Year: Reference year for the data point (Integer: 1990-2020)
+Total number of emigrants: Number of people born in the country but living abroad (Integer)
