@@ -5,7 +5,7 @@ This time series analysis project focuses on studying global migration trends be
 ## Project Description
 
 The project analyzes a recent dataset (2024) on global migration trends using several advanced statistical approaches:
-- ARIMA and GARCH models for forecasting
+- ARIMA models for forecasting
 - Copulas for analyzing dependencies between regions
 - Rare event analysis
 - Hawkes processes for modeling self-excitation dynamics
@@ -28,8 +28,7 @@ timeseries/
 ├── scripts/
 │   ├── arima_optimization.py           # ARIMA analysis with optimal parameter search
 │   ├── copula_analysis.py              # Copula analysis between regions
-│   ├── hawkes_analysis.py              # Hawkes process modeling
-│   └── garch_analysis.py               # GARCH volatility analysis
+│   └── hawkes_analysis.py              # Hawkes process modeling
 ├── .venv/                              # Virtual environment
 ├── requirements.txt                    # Python dependencies
 └── README.md                           # This file
@@ -82,9 +81,6 @@ python scripts/copula_analysis.py
 
 # Hawkes Analysis
 python scripts/hawkes_analysis.py
-
-# GARCH Analysis
-python scripts/garch_analysis.py
 ```
 
 ## Contributors
