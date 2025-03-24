@@ -17,7 +17,7 @@ def load_and_prepare_data(file_path):
     df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'])
     
     # Filtrage des données entre 2023-01 et 2024-05
-    mask = (df['DateTime'] >= '2023-01-01') & (df['DateTime'] <= '2023-03-31')
+    mask = (df['DateTime'] >= '2023-01-01') & (df['DateTime'] <= '2023-05-31')
     df = df[mask]
     
     print(f"Nombre de données après filtrage : {len(df)}")
@@ -35,7 +35,7 @@ def load_and_prepare_data(file_path):
     df['Pressure'] = df['Pressure'].str.replace(' in', '').astype(float)
     
     # Sélection des variables pour l'analyse
-    variables = ['Temperature', 'Dew_Point', 'Humidity', 'Wind_Speed', 'Pressure']
+    variables = ['Temperature', 'Humidity'] #'Dew_Point', 'Humidity', 'Wind_Speed', 'Pressure']
     data = df[variables]
     
     return data
@@ -48,12 +48,15 @@ def calculate_copula(x, y):
     
     # Calcul de la copule empirique
     n = len(x)
-    copula = np.zeros((n, n))
     
-    print("Calcul de la copule en cours...")
-    for i in tqdm(range(n), desc="Calcul de la copule"):
-        for j in range(n):
-            copula[i, j] = np.sum((u <= u[i]) & (v <= v[j])) / n
+    # Créer des grilles de coordonnées
+    u_grid, v_grid = np.meshgrid(u, v)
+    
+    # Calculer la copule en une seule opération vectorisée
+    # On garde la forme 2D en ne réduisant pas de dimension
+    copula = np.zeros((n, n))
+    for i in tqdm(range(n), desc="Calculating copula"):
+        copula[i, :] = np.mean((u_grid <= u[i]) & (v_grid <= v[i]), axis=0)
     
     return copula
 
