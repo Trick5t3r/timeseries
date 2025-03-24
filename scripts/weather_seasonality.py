@@ -27,8 +27,8 @@ def load_and_prepare_data(file_path):
     # Sélectionner uniquement les colonnes numériques pour le resampling
     numeric_df = df.select_dtypes(include=[np.number])
     
-    # Resampling par heure pour avoir des données régulières
-    df = numeric_df.resample('H').mean()
+    # Resampling par heure pour avoir des données régulières et interpolation des valeurs manquantes
+    df = numeric_df.resample('H').mean().interpolate(method='time')
     
     return df
 
@@ -155,7 +155,7 @@ def main():
     data = load_and_prepare_data('data/weather_data.csv')
     
     # Variables à analyser
-    variables = ['Temperature', 'Humidity', 'Wind_Speed', 'Pressure']
+    variables = ['Temperature', 'Humidity', 'Wind Speed', 'Pressure']
     
     for variable in variables:
         print(f"\nAnalyse de la saisonnalité et des tendances pour {variable}...")
@@ -194,4 +194,4 @@ def main():
             print("La saisonnalité est faible")
 
 if __name__ == "__main__":
-    main() 
+    main()

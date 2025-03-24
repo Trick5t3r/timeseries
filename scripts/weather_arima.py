@@ -171,8 +171,18 @@ def fit_arma_garch(data, p=1, q=1, garch_p=1, garch_q=1):
     """Fit an ARMA-GARCH model to the data."""
     print("\nFitting ARMA-GARCH model...")
     
+    # Clean the data by removing NaN and infinite values
+    clean_data = data.copy()
+    clean_data = clean_data.replace([np.inf, -np.inf], np.nan)
+    clean_data = clean_data.dropna()
+    
+    if len(clean_data) == 0:
+        raise ValueError("No valid data points after cleaning")
+    
+    print(f"Using {len(clean_data)} data points after cleaning")
+    
     # Fit the model
-    model = arch_model(data, vol='Garch', p=garch_p, q=garch_q, mean='AR', lags=p)
+    model = arch_model(clean_data, vol='Garch', p=garch_p, q=garch_q, mean='AR', lags=p)
     results = model.fit(disp='off')
     
     print("\nARMA-GARCH Model Summary:")
@@ -182,19 +192,31 @@ def fit_arma_garch(data, p=1, q=1, garch_p=1, garch_q=1):
 
 def plot_arma_garch_results(data, results, test_data=None):
     """Plot results from ARMA-GARCH model."""
+    # Clean the data for plotting
+    clean_data = data.copy()
+    clean_data = clean_data.replace([np.inf, -np.inf], np.nan)
+    clean_data = clean_data.dropna()
+    
+    if test_data is not None:
+        clean_test = test_data.copy()
+        clean_test = clean_test.replace([np.inf, -np.inf], np.nan)
+        clean_test = clean_test.dropna()
+    else:
+        clean_test = None
+    
     # Get predictions
-    forecast = results.forecast(horizon=len(test_data) if test_data is not None else 24)
-    mean_forecast = forecast.mean['h.1']
-    variance_forecast = forecast.variance['h.1']
+    forecast = results.forecast(horizon=len(clean_test) if clean_test is not None else 24)
+    mean_forecast = forecast.mean.iloc[:, 0]  # Get the first column of mean forecasts
+    variance_forecast = forecast.variance.iloc[:, 0]  # Get the first column of variance forecasts
     
     # Create figure with subplots
     fig = plt.figure(figsize=(15, 10))
     
     # 1. Mean predictions
     plt.subplot(2, 2, 1)
-    plt.plot(data.index, data.values, label='Données d\'entraînement', color='blue', alpha=0.6)
-    if test_data is not None:
-        plt.plot(test_data.index, test_data.values, label='Données de test', color='green', alpha=0.6)
+    plt.plot(clean_data.index, clean_data.values, label='Données d\'entraînement', color='blue', alpha=0.6)
+    if clean_test is not None:
+        plt.plot(clean_test.index, clean_test.values, label='Données de test', color='green', alpha=0.6)
     plt.plot(mean_forecast.index, mean_forecast.values, label='Prévisions ARMA-GARCH', color='red')
     plt.title('Prévisions de la moyenne')
     plt.xlabel('Date')
@@ -251,9 +273,9 @@ def main():
     plt.show()
     
     # Définition des paramètres pour la recherche par grille
-    p_range = range(0, 4)
-    d_range = range(1, 3)
-    q_range = range(0, 4)
+    p_range = range(0, 1) #434
+    d_range = range(1, 2)
+    q_range = range(0, 1)
     
     # Recherche des meilleurs paramètres sur l'ensemble d'entraînement
     best_model, best_params = grid_search_arima(train_data, p_range, d_range, q_range)
@@ -279,9 +301,13 @@ def main():
     
     # Evaluate ARMA-GARCH predictions
     forecast = arma_garch_results.forecast(horizon=len(test_data))
-    mean_forecast = forecast.mean['h.1']
+    mean_forecast = forecast.mean.iloc[:, 0]  # Get the first column of mean forecasts
+    
+    # Ensure the forecast has the same index as test_data
+    mean_forecast.index = test_data.index[:len(mean_forecast)]
+    
     print("\nÉvaluation des prédictions ARMA-GARCH:")
-    evaluate_predictions(test_data, mean_forecast)
+    evaluate_predictions(test_data[:len(mean_forecast)], mean_forecast)
 
 if __name__ == "__main__":
     main() 
