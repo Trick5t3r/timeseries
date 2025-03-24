@@ -16,12 +16,22 @@ def load_and_prepare_data(file_path):
     # Conversion des colonnes Date et Time en datetime
     df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'])
     
+    # Filtrage des données entre 2023-01 et 2024-05
+    mask = (df['DateTime'] >= '2023-03-01') & (df['DateTime'] <= '2023-03-31')
+    df = df[mask]
+    
+    print(f"Nombre de données après filtrage : {len(df)}")
+    
     # Extraction et conversion des variables numériques
     df['Temperature'] = df['Temperature'].str.replace(' °F', '').astype(float)
     # Conversion de Fahrenheit en Celsius
     df['Temperature'] = (df['Temperature'] - 32) * 5/9
     df['Wind_Speed'] = df['Wind Speed'].str.replace(' mph', '').astype(float)
     df['Pressure'] = df['Pressure'].str.replace(' in', '').astype(float)
+    
+    # Sélection des variables pour l'analyse
+    variables = ['Temperature', 'Wind_Speed', 'Pressure']
+    df = df[variables + ['DateTime']]
     
     # Calculer les changements entre les heures
     df['Temperature_Change'] = df['Temperature'].diff()

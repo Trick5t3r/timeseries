@@ -17,7 +17,7 @@ def load_and_prepare_data(file_path):
     df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'])
     
     # Filtrage des données entre 2023-01 et 2024-05
-    mask = (df['DateTime'] >= '2023-01-01') & (df['DateTime'] <= '2023-03-31')
+    mask = (df['DateTime'] >= '2023-01-01') & (df['DateTime'] <= '2023-05-31')
     df = df[mask]
     
     print(f"Nombre de données après filtrage : {len(df)}")
