@@ -1,90 +1,49 @@
-# Time Series Analysis Project
+# Analyse des Séries Temporelles de Température
 
-This time series analysis project focuses on studying global migration trends between 1990 and 2020. It uses various advanced time series analysis methods to understand patterns and dynamics of global emigration.
+Ce projet contient un script Python pour analyser les séries temporelles de température en utilisant le processus de Hawkes.
 
-## Project Description
-
-The project analyzes a recent dataset (2024) on global migration trends using several advanced statistical approaches:
-- ARIMA models for forecasting
-- Copulas for analyzing dependencies between regions
-- Rare event analysis
-- Hawkes processes for modeling self-excitation dynamics
-
-## Dataset
-
-The dataset is sourced from Kaggle: [Global Emigration Trends 1990-2020](https://www.kaggle.com/datasets/shreyasur965/global-emigration-trends-1990-2020)
-
-It contains information about:
-- Total number of emigrants by region
-- Annual migration trends
-- Regional variations in emigration
-
-## Project Structure
+## Structure du Projet
 
 ```
-timeseries/
+.
 ├── data/
-│   └── total-number-of-emigrants.csv    # Main dataset
-├── scripts/
-│   ├── arima_optimization.py           # ARIMA analysis with optimal parameter search
-│   ├── copula_analysis.py              # Copula analysis between regions
-│   └── hawkes_analysis.py              # Hawkes process modeling
-├── .venv/                              # Virtual environment
-├── requirements.txt                    # Python dependencies
-└── README.md                           # This file
+│   └── weather_data.csv    # Données météorologiques
+└── scripts/
+    └── weather_hawkes.py   # Script d'analyse
 ```
 
-## Installation
+## Données
 
-### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
+Le fichier `weather_data.csv` contient les données météorologiques avec les colonnes suivantes :
+- `Date` : Date de la mesure
+- `Time` : Heure de la mesure
+- `Temperature` : Température en degrés Celsius
+- `Wind Speed` : Vitesse du vent en mph
+- `Pressure` : Pression atmosphérique en in
 
-### Environment Setup
+## Script d'Analyse
 
-1. Clone the repository:
-```bash
-git clone https://github.com/Trick5t3r/timeseries.git
-cd timeseries
-```
+Le script `weather_hawkes.py` implémente une analyse des séries temporelles de température en utilisant le processus de Hawkes. Il permet de :
 
-2. Create a virtual environment:
-```bash
-python -m venv .venv
-```
+1. Charger et préparer les données
+2. Convertir les températures de Fahrenheit en Celsius
+3. Analyser les changements de température
+4. Ajuster un modèle de Hawkes aux données
+5. Visualiser les résultats avec :
+   - Processus ponctuel des pics de température
+   - Intensité conditionnelle du processus de Hawkes
+   - Distribution des changements de température
 
-3. Activate the virtual environment:
-- On Windows:
-```bash
-.venv\Scripts\activate
-```
-- On Unix or MacOS:
-```bash
-source .venv/bin/activate
-```
+## Utilisation
 
-4. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Each script can be run independently to perform a specific analysis:
+Pour exécuter l'analyse :
 
 ```bash
-# ARIMA Analysis
-python scripts/arima_optimization.py
-
-# Copula Analysis
-python scripts/copula_analysis.py
-
-# Hawkes Analysis
-python scripts/hawkes_analysis.py
+python scripts/weather_hawkes.py
 ```
 
-## Contributors
-
-- Théo LE PENDEVEN
-- Eliott PRADELEIX
-- Léandre SIMON
+Le script générera des visualisations et affichera les statistiques suivantes :
+- Nombre total d'événements (pics de température)
+- Paramètres du modèle de Hawkes (μ, α, β)
+- Stabilité du processus
+- Moments des pics significatifs de température
