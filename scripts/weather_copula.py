@@ -23,8 +23,13 @@ def load_and_prepare_data(file_path):
     print(f"Nombre de données après filtrage : {len(df)}")
     
     # Extraction et conversion des variables numériques
+    # Conversion de Fahrenheit en Celsius
     df['Temperature'] = df['Temperature'].str.replace(' °F', '').astype(float)
+    df['Temperature'] = (df['Temperature'] - 32) * 5/9
+    
     df['Dew_Point'] = df['Dew Point'].str.replace(' °F', '').astype(float)
+    df['Dew_Point'] = (df['Dew_Point'] - 32) * 5/9
+    
     df['Humidity'] = df['Humidity'].str.replace(' %', '').astype(float)
     df['Wind_Speed'] = df['Wind Speed'].str.replace(' mph', '').astype(float)
     df['Pressure'] = df['Pressure'].str.replace(' in', '').astype(float)

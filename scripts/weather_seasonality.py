@@ -21,6 +21,10 @@ def load_and_prepare_data(file_path):
         if col in df.columns:
             df[col] = df[col].str.replace(' °F', '').str.replace(' %', '').str.replace(' mph', '').str.replace(' in', '').astype(float)
     
+    # Conversion de la température de Fahrenheit en Celsius
+    if 'Temperature' in df.columns:
+        df['Temperature'] = (df['Temperature'] - 32) * 5/9
+    
     # Utiliser DateTime comme index
     df.set_index('DateTime', inplace=True)
     

@@ -18,6 +18,8 @@ def load_and_prepare_data(file_path):
     
     # Extraction et conversion des variables numériques
     df['Temperature'] = df['Temperature'].str.replace(' °F', '').astype(float)
+    # Conversion de Fahrenheit en Celsius
+    df['Temperature'] = (df['Temperature'] - 32) * 5/9
     df['Wind_Speed'] = df['Wind Speed'].str.replace(' mph', '').astype(float)
     df['Pressure'] = df['Pressure'].str.replace(' in', '').astype(float)
     

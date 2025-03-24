@@ -21,7 +21,7 @@ def plot_raw_data(data, title=None):
         title = 'Évolution de la température'
     plt.title(title)
     plt.xlabel('Date')
-    plt.ylabel('Température (°F)')
+    plt.ylabel('Température (°C)')
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.xticks(rotation=45)
     plt.tight_layout()
@@ -37,6 +37,9 @@ def load_and_prepare_data(file_path):
     
     # Extraction de la température et conversion en numérique
     df['Temperature'] = df['Temperature'].str.replace(' °F', '').astype(float)
+    
+    # Conversion de Fahrenheit en Celsius
+    df['Temperature'] = (df['Temperature'] - 32) * 5/9
     
     # Utiliser DateTime comme index
     time_series = df.set_index('DateTime')['Temperature']
@@ -93,7 +96,7 @@ def plot_results(data, model_fit, test_data=None):
     plt.plot(future_forecast_mean.index, future_forecast_mean, label='Prévisions futures', color='orange')
     plt.title('Température et prévisions')
     plt.xlabel('Date')
-    plt.ylabel('Température (°F)')
+    plt.ylabel('Température (°C)')
     plt.legend()
     
     # 2. Résidus normalisés
@@ -135,7 +138,7 @@ def plot_test_predictions(train_data, test_data, forecast_mean):
     
     plt.title('Prévisions ARIMA sur l\'ensemble de test')
     plt.xlabel('Date')
-    plt.ylabel('Température (°F)')
+    plt.ylabel('Température (°C)')
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.legend()
     plt.xticks(rotation=45)
@@ -150,8 +153,8 @@ def evaluate_predictions(actual, predicted):
     r2 = r2_score(actual, predicted)
     
     print("\nMétriques de performance sur l'ensemble de test:")
-    print(f"RMSE: {rmse:.2f}°F")
-    print(f"MAE: {mae:.2f}°F")
+    print(f"RMSE: {rmse:.2f}°C")
+    print(f"MAE: {mae:.2f}°C")
     print(f"R²: {r2:.4f}")
     
     # Calculer l'erreur en pourcentage
@@ -164,9 +167,9 @@ def evaluate_predictions(actual, predicted):
         error = abs(actual_val - pred_val)
         error_pct = (error / actual_val) * 100
         print(f"Date {date}:")
-        print(f"  Réel: {actual_val:.1f}°F")
-        print(f"  Prédit: {pred_val:.1f}°F")
-        print(f"  Erreur absolue: {error:.1f}°F")
+        print(f"  Réel: {actual_val:.1f}°C")
+        print(f"  Prédit: {pred_val:.1f}°C")
+        print(f"  Erreur absolue: {error:.1f}°C")
         print(f"  Erreur relative: {error_pct:.2f}%")
         print()
 
@@ -247,7 +250,7 @@ def plot_arma_garch_results(data, results, test_data=None):
     
     axes[0, 0].set_title('Prévisions de la moyenne avec intervalles de confiance')
     axes[0, 0].set_xlabel('Date')
-    axes[0, 0].set_ylabel('Température (°F)')
+    axes[0, 0].set_ylabel('Température (°C)')
     axes[0, 0].legend()
     
     # 2. Diagramme en violon des résidus
@@ -285,7 +288,7 @@ def main():
     plt.plot(test_data.index, test_data.values, marker='o', label='Données de test', color='green', alpha=0.6)
     plt.title('Division des données en ensembles d\'entraînement et de test')
     plt.xlabel('Date')
-    plt.ylabel('Température (°F)')
+    plt.ylabel('Température (°C)')
     plt.grid(True, linestyle='--', alpha=0.7)
     plt.legend()
     plt.xticks(rotation=45)
