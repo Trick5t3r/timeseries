@@ -5,6 +5,7 @@ from scipy import stats
 import seaborn as sns
 from itertools import combinations
 import warnings
+from tqdm import tqdm
 warnings.filterwarnings('ignore')
 
 def load_and_prepare_data(file_path):
@@ -14,6 +15,12 @@ def load_and_prepare_data(file_path):
     
     # Conversion des colonnes Date et Time en datetime
     df['DateTime'] = pd.to_datetime(df['Date'] + ' ' + df['Time'])
+    
+    # Filtrage des données entre 2023-01 et 2024-05
+    mask = (df['DateTime'] >= '2023-01-01') & (df['DateTime'] <= '2023-03-31')
+    df = df[mask]
+    
+    print(f"Nombre de données après filtrage : {len(df)}")
     
     # Extraction et conversion des variables numériques
     df['Temperature'] = df['Temperature'].str.replace(' °F', '').astype(float)
@@ -38,7 +45,8 @@ def calculate_copula(x, y):
     n = len(x)
     copula = np.zeros((n, n))
     
-    for i in range(n):
+    print("Calcul de la copule en cours...")
+    for i in tqdm(range(n), desc="Calcul de la copule"):
         for j in range(n):
             copula[i, j] = np.sum((u <= u[i]) & (v <= v[j])) / n
     
