@@ -51,8 +51,6 @@ pip install -r requirements.txt
 Pour vérifier que tout est installé correctement, vous pouvez exécuter le script d'analyse :
 
 ```bash
-python scripts/weather_hawkes.py
-```
+python scripts/weather_arima.py
 ```
 
-Ces modifications fourniront des instructions claires pour configurer le projet.
