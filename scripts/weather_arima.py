@@ -10,6 +10,7 @@ from arch import arch_model
 import statsmodels.api as sm
 from statsmodels.graphics.tsaplots import plot_acf
 from plot_corr_predit import plot_correlation  
+import plotly.graph_objects as go
 
 # Ignore les warnings pour un affichage plus propre
 warnings.filterwarnings("ignore")
@@ -80,6 +81,7 @@ def plot_results(data, model_fit, test_data=None):
     # Prédictions sur les données d'entraînement
     forecast = model_fit.get_prediction(start=data.index[0], end=data.index[-1])
     forecast_mean = forecast.predicted_mean
+    residuals = data - forecast_mean
     
     # Prédictions futures
     future_steps = len(test_data)  # 24 heures
@@ -91,24 +93,19 @@ def plot_results(data, model_fit, test_data=None):
     
     # 1. Données et prédictions
     plt.subplot(2, 2, 1)
-    #plt.plot(data, label='Données d\'entraînement', color='blue', alpha=0.6)
     if test_data is not None:
         plt.plot(test_data, label='Données de test', color='green', alpha=0.6)
-    #plt.plot(forecast_mean.index, forecast_mean, label='Prévisions ARIMA', color='red')
     plt.plot(future_forecast_mean.index, future_forecast_mean, label='Prévisions futures', color='orange')
     plt.title('Température et prévisions')
     plt.xlabel('Date')
     plt.ylabel('Température (°C)')
     plt.legend()
     
-    # 2. Résidus normalisés
+    # 2. Autocorrélation des résidus
     plt.subplot(2, 2, 2)
-    residuals = model_fit.resid
-    normalized_residuals = (residuals - residuals.mean()) / residuals.std()
-    plt.plot(normalized_residuals, label='Résidus normalisés')
-    plt.title('Résidus normalisés du modèle')
-    plt.legend()
-    
+    plot_acf(residuals[~np.isnan(residuals)], ax=plt.gca(), lags=40)
+    plt.title('Autocorrélation des résidus')
+
     # 3. Distribution des résidus
     plt.subplot(2, 2, 3)
     sns.histplot(residuals, kde=True)
@@ -118,16 +115,16 @@ def plot_results(data, model_fit, test_data=None):
     plt.subplot(2, 2, 4)
     from scipy import stats
     stats.probplot(residuals, dist="norm", plot=plt)
-    ax = plt.gca()  # Récupère l'axe courant
-    lims = ax.get_xlim()  # Récupère les limites actuelles
-    ax.plot(lims, lims, 'r--', label='y=x', alpha=0.6)  # Trace la droite y=x
+    ax = plt.gca()
+    lims = ax.get_xlim()
+    ax.plot(lims, lims, 'r--', label='y=x', alpha=0.6)
     ax.set_title("QQ-Plot des Résidus")
     ax.legend()
 
-    
     plt.tight_layout()
     plt.savefig('./results/weather_arima_results.png')
     plt.show()
+
 
 def plot_test_predictions(train_data, test_data, forecast_mean):
     """Affiche un graphique détaillé des prédictions sur l'ensemble de test."""
