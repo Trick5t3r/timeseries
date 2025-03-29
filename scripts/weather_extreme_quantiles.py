@@ -152,12 +152,15 @@ def plot_extreme_quantile(data, q, monthly=True):
         loc_fr, scale_fr = scp.stats.gumbel_r.fit(temp_data)
         x_fr = np.linspace(min(temp_data), max(temp_data), 100)
         pdf_fr = scp.stats.gumbel_r.pdf(x_fr, loc_fr, scale_fr)
-        dist_fr = go.Scatter(x=x_fr, y=pdf_fr, mode='lines', name=f'Fréchet fit', line=dict(color='red'))
+        dist_fr = go.Scatter(x=x_fr, y=pdf_fr, mode='lines', name=f'Fréchet (Gumbel) fit', line=dict(color='red'))
         fig.add_trace(dist_fr)
 
         # Estimate extreme quantiles for Weibull and Fréchet
         Quantile_we = scp.stats.weibull_min.ppf(q, shape_we, loc_we, scale_we)
         Quantile_fr = scp.stats.gumbel_r.ppf(q, loc_fr, scale_fr)
+
+        print('we', shape_we, loc_we, scale_we)
+        print('fr',  loc_fr, scale_fr)
 
         # Plot the extreme quantiles for each distribution
         quantile_we_line = go.Scatter(x=[Quantile_we, Quantile_we], y=[0, 0.25], mode='lines', line=dict(color='green', dash='dash'), name=f'{q}-quantile Weibull')
@@ -177,7 +180,7 @@ def qqplot(data, threshold=0.8, plot_threshold=39):
     temp_data = filter_data_by_quantile(temp_data, threshold)
     
     # Weibull Distribution Fit
-    shape_we, loc_we, scale_we = scp.stats.weibull_min.fit(temp_data, floc=0)
+    shape_we, loc_we, scale_we = scp.stats.weibull_min.fit(temp_data)
     
     # Fréchet Distribution Fit (same as Gumbel for this case)
     loc_fr, scale_fr = scp.stats.gumbel_r.fit(temp_data)
@@ -200,11 +203,11 @@ def qqplot(data, threshold=0.8, plot_threshold=39):
     fig.add_trace(go.Scatter(x=theoretical_we, y=theoretical_we, mode='lines', name='Theoretical Line', line=dict(color='red', dash='dash')), row=1, col=1)
 
     # Add Fréchet QQ plot
-    fig.add_trace(go.Scatter(x=theoretical_fr, y=sorted_data_fr, mode='markers', name='Data (Fréchet)', marker=dict(color='green')), row=1, col=2)
+    fig.add_trace(go.Scatter(x=theoretical_fr, y=sorted_data_fr, mode='markers', name='Data (Gumbell)', marker=dict(color='green')), row=1, col=2)
     fig.add_trace(go.Scatter(x=theoretical_fr, y=theoretical_fr, mode='lines', name='Theoretical Line', line=dict(color='red', dash='dash')), row=1, col=2)
 
     # Update layout
-    fig.update_layout(title="QQ Plots for Weibull and Fréchet Distributions", height=500, width=1000, showlegend=True)
+    fig.update_layout(title="QQ Plots for Weibull and Gumbell Distributions", height=500, width=1000, showlegend=True)
     fig.update_xaxes(title_text="Theoretical Quantiles", row=1, col=1)
     fig.update_yaxes(title_text="Sample Quantiles", row=1, col=1)
     fig.update_xaxes(title_text="Theoretical Quantiles", row=1, col=2)
@@ -246,12 +249,27 @@ def main():
     groups = {month: data for month, data in df.groupby('month')}
     
     # Quantile_fr, Quantile_we = plot_extreme_quantile(groups, 0.99, monthly=True)
-    # q_fr, q_we = plot_extreme_quantile(df, 0.99, monthly=False)
+    q_fr, q_we = plot_extreme_quantile(df, 0.99, monthly=False)
 
     # proportion_above_threshold(df, q_fr, q_we)
     # proportion_above_threshold(groups, Quantile_fr, Quantile_we)
 
     qqplot(df)
+
+    # hist_data = go.Histogram(x=df['Temperature'], 
+    #                             xbins=dict(start=min(df['Temperature']),  # Start the bins at the minimum value in the column
+    #                                        end=max(df['Temperature']) + 2,    # End the bins at the maximum value in the column
+    #                                        size=10/9                         # Set the bin width to 1
+    #                                        ),
+    #                             marker=dict(color='#1f77b4'),
+    #                             histnorm='probability density', 
+    #                             name='Yearly temperature'
+    #                             )
+    # fig = go.Figure(data=[hist_data])
+    # fig.update_layout(title="Distribution of the temperature yearly", height=500, width=1000, showlegend=False)
+    # fig.update_yaxes(title_text="Frequency")
+    # fig.update_xaxes(title_text="Temperature (°C)")
+    # fig.show()
 
     return 0
 
