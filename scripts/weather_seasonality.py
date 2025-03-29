@@ -36,7 +36,7 @@ def load_and_prepare_data(file_path):
     
     return df
 
-def plot_decomposition(data, variable, period=24):
+def plot_decomposition(data, variable, period=24*32):
     """Trace la décomposition de la série temporelle."""
     # Décomposition de la série temporelle
     decomposition = seasonal_decompose(data[variable], period=period)
