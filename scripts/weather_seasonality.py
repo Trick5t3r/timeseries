@@ -77,6 +77,7 @@ def plot_decomposition(data, variable, period=24):
     ax4.legend()
     
     plt.tight_layout()
+    plt.savefig('./results/weather_seasonality.png')
     plt.show()
 
 def plot_seasonal_patterns(data, variable, period=24):
@@ -100,6 +101,7 @@ def plot_seasonal_patterns(data, variable, period=24):
     
     plt.legend()
     plt.tight_layout()
+    plt.savefig('./results/weather_seasonal_patterns.png')
     plt.show()
 
 def plot_trend_analysis(data, variable, window=24):
@@ -129,6 +131,7 @@ def plot_trend_analysis(data, variable, window=24):
     ax2.legend()
     
     plt.tight_layout()
+    plt.savefig('./results/weather_trend_analysis.png')
     plt.show()
 
 def analyze_spectral_density(data, variable, sampling_rate=1):
@@ -152,6 +155,7 @@ def analyze_spectral_density(data, variable, sampling_rate=1):
     
     plt.legend()
     plt.tight_layout()
+    plt.savefig('./results/weather_spectral_density.png')
     plt.show()
 
 def main():
@@ -159,7 +163,7 @@ def main():
     data = load_and_prepare_data('data/weather_data.csv')
     
     # Variables à analyser
-    variables = ['Temperature', 'Humidity', 'Wind Speed', 'Pressure']
+    variables = ['Temperature']#, 'Humidity', 'Wind Speed', 'Pressure']
     
     for variable in variables:
         print(f"\nAnalyse de la saisonnalité et des tendances pour {variable}...")

@@ -105,6 +105,8 @@ def plot_copula(copula, var1, var2, dependence_measures, x, y):
     plt.xticks(rotation=45)
     plt.tight_layout()
     
+    # Enregistrer le plot dans le répertoire ./results
+    plt.savefig('./results/copula_plot.png')  # Vous pouvez changer le nom du fichier si nécessaire
     plt.show()
 
 def main():
