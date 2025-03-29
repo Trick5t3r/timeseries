@@ -1,49 +1,58 @@
-# Analyse des Séries Temporelles de Température
+## Configuration
 
-Ce projet contient un script Python pour analyser les séries temporelles de température en utilisant le processus de Hawkes.
+### Étape 1 : Cloner le dépôt
 
-## Structure du Projet
+Ouvrez votre terminal (ou invite de commandes) et exécutez la commande suivante pour cloner le dépôt :
 
-```
-.
-├── data/
-│   └── weather_data.csv    # Données météorologiques
-└── scripts/
-    └── weather_hawkes.py   # Script d'analyse
+```bash
+git clone https://github.com/Trick5t3r/timeseries.git
 ```
 
-## Données
+### Étape 2 : Naviguer dans le répertoire
 
-Le fichier `weather_data.csv` contient les données météorologiques avec les colonnes suivantes :
-- `Date` : Date de la mesure
-- `Time` : Heure de la mesure
-- `Temperature` : Température en degrés Celsius
-- `Wind Speed` : Vitesse du vent en mph
-- `Pressure` : Pression atmosphérique en in
+Accédez au répertoire cloné :
 
-## Script d'Analyse
+```bash
+cd timeseries
+```
 
-Le script `weather_hawkes.py` implémente une analyse des séries temporelles de température en utilisant le processus de Hawkes. Il permet de :
+### Étape 3 : Créer un environnement virtuel
 
-1. Charger et préparer les données
-2. Convertir les températures de Fahrenheit en Celsius
-3. Analyser les changements de température
-4. Ajuster un modèle de Hawkes aux données
-5. Visualiser les résultats avec :
-   - Processus ponctuel des pics de température
-   - Intensité conditionnelle du processus de Hawkes
-   - Distribution des changements de température
+Pour créer un environnement virtuel, exécutez la commande suivante :
 
-## Utilisation
+```bash
+python -m venv .venv
+```
 
-Pour exécuter l'analyse :
+### Étape 4 : Activer l'environnement virtuel
+
+- **Sur Windows :**
+
+```bash
+.venv\Scripts\activate
+```
+
+- **Sur macOS et Linux :**
+
+```bash
+source .venv/bin/activate
+```
+
+### Étape 5 : Installer les dépendances
+
+Une fois l'environnement virtuel activé, installez les dépendances nécessaires en utilisant le fichier `requirements.txt` :
+
+```bash
+pip install -r requirements.txt
+```
+
+### Étape 6 : Vérifier l'installation
+
+Pour vérifier que tout est installé correctement, vous pouvez exécuter le script d'analyse :
 
 ```bash
 python scripts/weather_hawkes.py
 ```
+```
 
-Le script générera des visualisations et affichera les statistiques suivantes :
-- Nombre total d'événements (pics de température)
-- Paramètres du modèle de Hawkes (μ, α, β)
-- Stabilité du processus
-- Moments des pics significatifs de température
+Ces modifications fourniront des instructions claires pour configurer le projet.
